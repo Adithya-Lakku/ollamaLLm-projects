@@ -1,0 +1,4 @@
+discord
+pyPDF2
+requests
+ipykernel
