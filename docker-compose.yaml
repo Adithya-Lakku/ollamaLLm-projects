@@ -1,15 +1,21 @@
-version: "3.9"
+
 services:
   ollama:
     image: ollama/ollama
     ports: 
       - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
     command: ["serve"]
 
   zacrobot:
     image: zacrobotimage
     depends_on:
       - ollama
+    volumes:
+      - ./zacrobot:/app
+    working_dir: /app
+    command: python3 zacrobot.py
 volumes:
-  ollama_models:
+  ollama:
     external: true

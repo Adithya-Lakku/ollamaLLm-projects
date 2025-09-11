@@ -4,9 +4,10 @@ import json
 from PyPDF2 import PdfReader
 import os
 import asyncio
+import aiohttp
 from keys import DiscordBotToken,DiscordWebhookUrl,OpenRouterToken,TOKEN,ChannelID,MODEL
 
-def readPdf(filepath):
+def readPdf(filepath): # read pdf text
     reader = PdfReader(filepath) 
     #print(len(reader.pages))
 
@@ -21,7 +22,7 @@ def readPdf(filepath):
     return text
 
 
-def dummytester():
+def dummytester(): # being used to simply test if dockercompose/container activates 
     dummytext = """ yo what up this is a test"""
 
     response = requests.post(DiscordWebhookUrl,json = {"content":dummytext})
@@ -31,9 +32,9 @@ def dummytester():
         print("discord fail")
 
 
-def Summarizerv2(text):
+def Summarizerv2(text): #modified version of summarizerv1 to use ollama as llm engine
     
-    url = "http://ollama:11434/api/generate"
+    url = "http://ollama:11434/api/generate" #usually is "http://localhost:11434/api/generate"
 
 
     #prompt = f"summarize the text in 300 characters {text}"
@@ -64,7 +65,7 @@ def Summarizerv2(text):
 
 
 
-def post_to_discord(text):
+def post_to_discord(text): # post to discord 💀
 
     
     response = requests.post(DiscordWebhookUrl,json={"content": text})
@@ -98,7 +99,6 @@ async def on_message(message):
         await attachment.save(file_path)
         
         text = readPdf(filepath=file_path)
-        #text1 = Summarizer(text)
         text1 = Summarizerv2(text)
         
         post_to_discord(text1)
@@ -108,3 +108,4 @@ async def on_message(message):
         break
 
 client.run(DiscordBotToken)
+
